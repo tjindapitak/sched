@@ -2,7 +2,7 @@ package services
 
 import (
 	"encoding/json"
-	"fmt"
+	"log"
 	"sched/external"
 	"sched/internal/core/ports"
 	"sched/internal/dto"
@@ -28,7 +28,7 @@ func (service *scheduleSrv) Schedule(req dto.ScheduleRequest) error {
 	b, err := json.Marshal(req)
 
 	if err != nil {
-		fmt.Println("Error converting json ", err.Error())
+		log.Println("Error converting json ", err.Error())
 	}
 
 	return service.scheduleRepository.AddToRedisSortedList(float64(external.GetEpocSecond(*req.When)), string(b))

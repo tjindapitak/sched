@@ -1,7 +1,7 @@
 package repositories
 
 import (
-	"fmt"
+	"log"
 	"sched/internal/core/ports"
 	"sched/internal/dto"
 
@@ -29,7 +29,7 @@ func (repo *scheduleRepository) AddToRedisSortedList(timestamp float64, payload 
 	}).Err()
 
 	if err != nil {
-		fmt.Println("Error in adding job to redis: " + payload)
+		log.Println("Error in adding job to redis: " + payload)
 	}
 
 	return err
@@ -40,7 +40,7 @@ func (repo *scheduleRepository) FetchTask() (*dto.ScheduledTask, error) {
 
 	val, err := cmd.Result()
 	if err != nil {
-		fmt.Println("Error in getting job :", err.Error())
+		log.Println("Error in getting job :", err.Error())
 		return nil, err
 	}
 
@@ -61,6 +61,6 @@ func (repo *scheduleRepository) DeleteTask(task *dto.ScheduledTask) {
 	cmd := repo.redisClient.ZRem(taskRedisKey, *task.Member)
 
 	if cmd.Err() != nil {
-		fmt.Println("Cannot ZREM", cmd.Err().Error())
+		log.Println("Cannot ZREM", cmd.Err().Error())
 	}
 }

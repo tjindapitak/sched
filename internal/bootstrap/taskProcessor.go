@@ -3,7 +3,7 @@ package bootstrap
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
+	"log"
 	"net/http"
 	"sched/external"
 	"sched/internal/core/ports"
@@ -12,12 +12,12 @@ import (
 )
 
 func TaskProcessor(scheduleRepository ports.ScheduleRepository) {
-	fmt.Println("[INFO] Starting task prcessor")
+	log.Println("Starting task prcessor")
 
 	for {
 		job, err := scheduleRepository.FetchTask()
 		if err != nil {
-			fmt.Println("Cannot fetch from Redis", err.Error())
+			log.Println("Cannot fetch from Redis", err.Error())
 			time.Sleep(1 * time.Second)
 			continue
 		}
@@ -28,7 +28,7 @@ func TaskProcessor(scheduleRepository ports.ScheduleRepository) {
 		}
 
 		if int64(job.Score) <= external.CurrentTime() {
-			fmt.Println("Run ", *job.Member)
+			log.Println("Run ", *job.Member)
 			scheduleRepository.DeleteTask(job)
 			makeHttpRequest(job.Member)
 		} else {

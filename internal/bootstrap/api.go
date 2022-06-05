@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"context"
 	"fmt"
+	"log"
 	"net/http"
 	"sched/config"
 	scheduleHandlers "sched/internal/handlers/scheduleHandler"
@@ -15,6 +16,8 @@ import (
 )
 
 func Api(scheduleHandler *scheduleHandlers.HTTPHandler) {
+	log.Println("Starting Api")
+
 	e := newHTTPServer(
 		scheduleHandler,
 	)
